@@ -1,0 +1,58 @@
+Read mode...
+SETTING: mquanta(8B), length(1), mode(0)
+SIZE: 6.400e+01 [B]
+TIME: 2.257e-03 [s]
+BANDWIDTH: 2.836e+04 [B/s] 
+srun: Job 27483356 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for job 27483356
+Read mode...
+SETTING: mquanta(8B), length(10), mode(0)
+SIZE: 6.400e+02 [B]
+TIME: 1.461e-03 [s]
+BANDWIDTH: 4.380e+05 [B/s] 
+srun: Job 27483356 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for job 27483356
+Read mode...
+SETTING: mquanta(8B), length(100), mode(0)
+SIZE: 6.400e+03 [B]
+TIME: 2.075e-03 [s]
+BANDWIDTH: 3.084e+06 [B/s] 
+srun: Job 27483356 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for job 27483356
+Read mode...
+SETTING: mquanta(8B), length(1000), mode(0)
+SIZE: 6.400e+04 [B]
+TIME: 1.309e-03 [s]
+BANDWIDTH: 4.888e+07 [B/s] 
+Read mode...
+SETTING: mquanta(8B), length(10000), mode(0)
+SIZE: 6.400e+05 [B]
+TIME: 1.003e-03 [s]
+BANDWIDTH: 6.380e+08 [B/s] 
+Read mode...
+SETTING: mquanta(8B), length(100000), mode(0)
+SIZE: 6.400e+06 [B]
+TIME: 2.223e-03 [s]
+BANDWIDTH: 2.879e+09 [B/s] 
+srun: Job 27483356 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for job 27483356
+Read mode...
+SETTING: mquanta(8B), length(1000000), mode(0)
+SIZE: 6.400e+07 [B]
+TIME: 6.435e-03 [s]
+BANDWIDTH: 9.946e+09 [B/s] 
+Read mode...
+SETTING: mquanta(8B), length(10000000), mode(0)
+SIZE: 6.400e+08 [B]
+TIME: 4.582e-02 [s]
+BANDWIDTH: 1.397e+10 [B/s] 
+Read mode...
+SETTING: mquanta(8B), length(100000000), mode(0)
+SIZE: 6.400e+09 [B]
+TIME: 4.333e-01 [s]
+BANDWIDTH: 1.477e+10 [B/s] 
+Read mode...
+SETTING: mquanta(8B), length(1000000000), mode(0)
+SIZE: 6.400e+10 [B]
+TIME: 4.330e+00 [s]
+BANDWIDTH: 1.478e+10 [B/s] 

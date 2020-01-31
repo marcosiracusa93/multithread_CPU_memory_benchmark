@@ -1,0 +1,78 @@
+OMP: Warning #181: OMP_PROC_BIND: ignored because KMP_AFFINITY has been defined
+OMP: Warning #181: OMP_PLACES: ignored because KMP_AFFINITY has been defined
+OMP: Info #212: KMP_AFFINITY: decoding x2APIC ids.
+OMP: Info #210: KMP_AFFINITY: Affinity capable, using global cpuid leaf 11 info
+OMP: Info #154: KMP_AFFINITY: Initial OS proc set respected: 0-15,32-47
+OMP: Info #156: KMP_AFFINITY: 32 available OS procs
+OMP: Info #157: KMP_AFFINITY: Uniform topology
+OMP: Info #179: KMP_AFFINITY: 1 packages x 16 cores/pkg x 2 threads/core (16 total cores)
+OMP: Info #214: KMP_AFFINITY: OS proc to physical thread map:
+OMP: Info #171: KMP_AFFINITY: OS proc 0 maps to package 0 core 0 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 32 maps to package 0 core 0 thread 1 
+OMP: Info #171: KMP_AFFINITY: OS proc 1 maps to package 0 core 1 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 33 maps to package 0 core 1 thread 1 
+OMP: Info #171: KMP_AFFINITY: OS proc 2 maps to package 0 core 2 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 34 maps to package 0 core 2 thread 1 
+OMP: Info #171: KMP_AFFINITY: OS proc 3 maps to package 0 core 3 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 35 maps to package 0 core 3 thread 1 
+OMP: Info #171: KMP_AFFINITY: OS proc 4 maps to package 0 core 4 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 36 maps to package 0 core 4 thread 1 
+OMP: Info #171: KMP_AFFINITY: OS proc 5 maps to package 0 core 5 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 37 maps to package 0 core 5 thread 1 
+OMP: Info #171: KMP_AFFINITY: OS proc 6 maps to package 0 core 6 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 38 maps to package 0 core 6 thread 1 
+OMP: Info #171: KMP_AFFINITY: OS proc 7 maps to package 0 core 7 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 39 maps to package 0 core 7 thread 1 
+OMP: Info #171: KMP_AFFINITY: OS proc 8 maps to package 0 core 8 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 40 maps to package 0 core 8 thread 1 
+OMP: Info #171: KMP_AFFINITY: OS proc 9 maps to package 0 core 9 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 41 maps to package 0 core 9 thread 1 
+OMP: Info #171: KMP_AFFINITY: OS proc 10 maps to package 0 core 10 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 42 maps to package 0 core 10 thread 1 
+OMP: Info #171: KMP_AFFINITY: OS proc 11 maps to package 0 core 11 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 43 maps to package 0 core 11 thread 1 
+OMP: Info #171: KMP_AFFINITY: OS proc 12 maps to package 0 core 12 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 44 maps to package 0 core 12 thread 1 
+OMP: Info #171: KMP_AFFINITY: OS proc 13 maps to package 0 core 13 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 45 maps to package 0 core 13 thread 1 
+OMP: Info #171: KMP_AFFINITY: OS proc 14 maps to package 0 core 14 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 46 maps to package 0 core 14 thread 1 
+OMP: Info #171: KMP_AFFINITY: OS proc 15 maps to package 0 core 15 thread 0 
+OMP: Info #171: KMP_AFFINITY: OS proc 47 maps to package 0 core 15 thread 1 
+OMP: Info #144: KMP_AFFINITY: Threads may migrate across 1 innermost levels of machine
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55441 thread 0 bound to OS proc set 0,32
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55442 thread 1 bound to OS proc set 0,32
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55443 thread 2 bound to OS proc set 1,33
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55444 thread 3 bound to OS proc set 1,33
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55445 thread 4 bound to OS proc set 2,34
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55446 thread 5 bound to OS proc set 2,34
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55447 thread 6 bound to OS proc set 3,35
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55448 thread 7 bound to OS proc set 3,35
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55449 thread 8 bound to OS proc set 4,36
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55450 thread 9 bound to OS proc set 4,36
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55451 thread 10 bound to OS proc set 5,37
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55452 thread 11 bound to OS proc set 5,37
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55453 thread 12 bound to OS proc set 6,38
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55454 thread 13 bound to OS proc set 6,38
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55455 thread 14 bound to OS proc set 7,39
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55456 thread 15 bound to OS proc set 7,39
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55457 thread 16 bound to OS proc set 8,40
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55458 thread 17 bound to OS proc set 8,40
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55459 thread 18 bound to OS proc set 9,41
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55460 thread 19 bound to OS proc set 9,41
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55461 thread 20 bound to OS proc set 10,42
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55462 thread 21 bound to OS proc set 10,42
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55463 thread 22 bound to OS proc set 11,43
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55464 thread 23 bound to OS proc set 11,43
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55465 thread 24 bound to OS proc set 12,44
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55466 thread 25 bound to OS proc set 12,44
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55467 thread 26 bound to OS proc set 13,45
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55468 thread 27 bound to OS proc set 13,45
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55469 thread 28 bound to OS proc set 14,46
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55470 thread 29 bound to OS proc set 14,46
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55471 thread 30 bound to OS proc set 15,47
+OMP: Info #250: KMP_AFFINITY: pid 55441 tid 55472 thread 31 bound to OS proc set 15,47
+mquanta [B], length, mode {R/W/RW}, memsize [B], time [s], bandwidth [B/s]
+8B 33554432 R 8.590e+09 1.353e-01 6.349e+10
+8B 33554432 W 8.590e+09 3.265e-01 2.631e+10
+8B 33554432 RW 8.590e+09 3.267e-01 2.629e+10

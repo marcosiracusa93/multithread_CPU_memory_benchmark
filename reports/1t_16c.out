@@ -1,0 +1,75 @@
+/var/spool/slurmd/job27479528/slurm_script: line 12: //export: No such file or directory
+/var/spool/slurmd/job27479528/slurm_script: line 13: //export: No such file or directory
+/var/spool/slurmd/job27479528/slurm_script: line 14: //export: No such file or directory
+srun: error: /usr/bin/myquota stderr: myquota: cannot open '/global/cscratch1/sd/nobody': Permission denied (13)
+
+Read mode...
+SETTING: mquanta(8B), length(1), mode(0)
+SIZE: 8.000e+00 [B]
+TIME: 9.300e-08 [s]
+BANDWIDTH: 8.602e+07 [B/s] 
+srun: error: /usr/bin/myquota stderr: myquota: cannot open '/global/cscratch1/sd/nobody': Permission denied (13)
+
+Read mode...
+SETTING: mquanta(8B), length(10), mode(0)
+SIZE: 8.000e+01 [B]
+TIME: 1.480e-07 [s]
+BANDWIDTH: 5.405e+08 [B/s] 
+srun: error: /usr/bin/myquota stderr: myquota: cannot open '/global/cscratch1/sd/nobody': Permission denied (13)
+
+Read mode...
+SETTING: mquanta(8B), length(100), mode(0)
+SIZE: 8.000e+02 [B]
+TIME: 2.790e-07 [s]
+BANDWIDTH: 2.867e+09 [B/s] 
+srun: error: /usr/bin/myquota stderr: myquota: cannot open '/global/cscratch1/sd/nobody': Permission denied (13)
+
+Read mode...
+SETTING: mquanta(8B), length(1000), mode(0)
+SIZE: 8.000e+03 [B]
+TIME: 1.782e-06 [s]
+BANDWIDTH: 4.489e+09 [B/s] 
+srun: error: /usr/bin/myquota stderr: myquota: cannot open '/global/cscratch1/sd/nobody': Permission denied (13)
+
+Read mode...
+SETTING: mquanta(8B), length(10000), mode(0)
+SIZE: 8.000e+04 [B]
+TIME: 2.161e-05 [s]
+BANDWIDTH: 3.703e+09 [B/s] 
+srun: error: /usr/bin/myquota stderr: myquota: cannot open '/global/cscratch1/sd/nobody': Permission denied (13)
+
+Read mode...
+SETTING: mquanta(8B), length(100000), mode(0)
+SIZE: 8.000e+05 [B]
+TIME: 2.155e-04 [s]
+BANDWIDTH: 3.712e+09 [B/s] 
+srun: error: /usr/bin/myquota stderr: myquota: cannot open '/global/cscratch1/sd/nobody': Permission denied (13)
+
+Read mode...
+SETTING: mquanta(8B), length(1000000), mode(0)
+SIZE: 8.000e+06 [B]
+TIME: 2.925e-03 [s]
+BANDWIDTH: 2.735e+09 [B/s] 
+srun: error: /usr/bin/myquota stderr: myquota: cannot open '/global/cscratch1/sd/nobody': Permission denied (13)
+
+Read mode...
+SETTING: mquanta(8B), length(10000000), mode(0)
+SIZE: 8.000e+07 [B]
+TIME: 3.295e-02 [s]
+BANDWIDTH: 2.428e+09 [B/s] 
+srun: error: /usr/bin/myquota stderr: myquota: cannot open '/global/cscratch1/sd/nobody': Permission denied (13)
+
+srun: Job 27479528 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for job 27479528
+Read mode...
+SETTING: mquanta(8B), length(100000000), mode(0)
+SIZE: 8.000e+08 [B]
+TIME: 3.774e-01 [s]
+BANDWIDTH: 2.120e+09 [B/s] 
+srun: error: /usr/bin/myquota stderr: myquota: cannot open '/global/cscratch1/sd/nobody': Permission denied (13)
+
+Read mode...
+SETTING: mquanta(8B), length(1000000000), mode(0)
+SIZE: 8.000e+09 [B]
+TIME: 3.344e+00 [s]
+BANDWIDTH: 2.392e+09 [B/s] 

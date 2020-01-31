@@ -1,0 +1,50 @@
+Read mode...
+SETTING: mquanta(8B), length(1), mode(0)
+SIZE: 1.280e+02 [B]
+TIME: 2.855e-03 [s]
+BANDWIDTH: 4.483e+04 [B/s] 
+Read mode...
+SETTING: mquanta(8B), length(10), mode(0)
+SIZE: 1.280e+03 [B]
+TIME: 2.705e-03 [s]
+BANDWIDTH: 4.731e+05 [B/s] 
+Read mode...
+SETTING: mquanta(8B), length(100), mode(0)
+SIZE: 1.280e+04 [B]
+TIME: 2.354e-03 [s]
+BANDWIDTH: 5.438e+06 [B/s] 
+Read mode...
+SETTING: mquanta(8B), length(1000), mode(0)
+SIZE: 1.280e+05 [B]
+TIME: 3.282e-03 [s]
+BANDWIDTH: 3.900e+07 [B/s] 
+Read mode...
+SETTING: mquanta(8B), length(10000), mode(0)
+SIZE: 1.280e+06 [B]
+TIME: 3.751e-03 [s]
+BANDWIDTH: 3.413e+08 [B/s] 
+Read mode...
+SETTING: mquanta(8B), length(100000), mode(0)
+SIZE: 1.280e+07 [B]
+TIME: 3.857e-03 [s]
+BANDWIDTH: 3.319e+09 [B/s] 
+Read mode...
+SETTING: mquanta(8B), length(1000000), mode(0)
+SIZE: 1.280e+08 [B]
+TIME: 1.061e-02 [s]
+BANDWIDTH: 1.207e+10 [B/s] 
+Read mode...
+SETTING: mquanta(8B), length(10000000), mode(0)
+SIZE: 1.280e+09 [B]
+TIME: 4.766e-02 [s]
+BANDWIDTH: 2.686e+10 [B/s] 
+Read mode...
+SETTING: mquanta(8B), length(100000000), mode(0)
+SIZE: 1.280e+10 [B]
+TIME: 4.551e-01 [s]
+BANDWIDTH: 2.813e+10 [B/s]
+Read mode...
+SETTING: mquanta(8B), length(1000000000), mode(0)
+SIZE: 1.280e+11 [B]
+TIME: 4.812e+00 [s]
+BANDWIDTH: 2.660e+10 [B/s] 
