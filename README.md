@@ -7,7 +7,7 @@ In particular, we are interested in measuring _read-only/write-only/read-write_ 
 * __memory concurrency__ the amount of in-flight bytes in the memory subsystem
 For this reason, the allocated __memory space__ is subdivided in __blocks__, __segments__ and __elements__ in the following way:<br>
 
-![alt text](https://github.com/marcosiracusa93/multithread_CPU_memory_benchmark/blob/master/CPU_benchmark_memory_layout.pdf)
+![alt text](https://github.com/marcosiracusa93/multithread_CPU_memory_benchmark/blob/master/CPU_benchmark_memory_layout.png)
 
 Each thread accesses a certain __memory block__ with a mapping assigned at runtime according to the running mode. 
 If the mapping is randomized, each memory block might be assigned from none to multiple threads. 
