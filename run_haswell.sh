@@ -7,22 +7,18 @@
 #SBATCH --constraint=haswell
 
 #SBATCH --mail-type=begin,end,fail
-#SBATCH --mail-user=msiracusa@lbl.gov
+#SBATCH --mail-user=marco.siracusa@mail.polimi.it
 
-max_num_threads=$((2**5))
-#max_num_trans=$((2**10))
-#max_access_length=$((2**18))
-max_num_trans=$((2**0))
-max_access_length=$((2**28))
+max_num_elements=$((2**28))
+num_threads=$((2**5))
 
 export KMP_AFFINITY=compact,verbose
 
 export OMP_PROC_BIND=true
 export OMP_PLACES=threads #(core/threads)
+export OMP_NUM_THREADS=$num_threads
 
-srun ./bin/benchmark_mt $max_num_threads $max_num_trans $max_access_length 0
-
-export OMP_NUM_THREADS=$max_num_threads
+srun ./bin/benchmark_mt $num_threads $max_num_elements 0
 
 
 #for i in {0..9}
