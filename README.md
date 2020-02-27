@@ -5,6 +5,7 @@ In particular, we are interested in measuring _read-only/write-only/read-write_ 
 * __memory quanta__ the byte size of the data type we access memory with
 * __spatial locality__ the amount of subsequent bytes of sequential access
 * __memory concurrency__ the amount of in-flight bytes in the memory subsystem<br>
+
 For this reason, the allocated __memory space__ is subdivided in __blocks__, __segments__ and __elements__ in the following way:<br>
 
 ![alt text](https://github.com/marcosiracusa93/multithread_CPU_memory_benchmark/blob/master/CPU_benchmark_memory_layout.png)
@@ -20,6 +21,7 @@ In particular, memory segments can be accessed:
   * __backward__ the next accessed segment is stored in memory before the current one
 * __randomly__ the next segment to be accessed is picked randomly during compile time (index dependent)
 * __gather-scatter__ the next segment to be accessed is picked randomly during run time (data dependent)<br>
+
 The listed access patterns allow to characterize memory bandwidth at the different NUMA levels of the multicore architecture.<br>
 Memory segments are composed of __contiguous elements__ to be accessed:
 * __sequentialy__ the next accessed element is stored in memory before/after the current one
