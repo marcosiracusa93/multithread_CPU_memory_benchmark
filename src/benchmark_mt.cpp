@@ -13,6 +13,8 @@
 #include <vector>
 #include <fstream>
 
+#include "libbutils.hpp"
+
 /*
  *
  * The benchmark reads/writes/copies a dataset subdivided in memory blocks, memory segments and memory accesses to first class type elements.
@@ -30,18 +32,19 @@
  *
  */
 
-#define TYPE double                     // defines the MEMORY QUANTA: type of each memory element we want to access
-#define ENABLE_READ 1                   // enables the execution of the read-only benchmark
-#define ENABLE_WRITE 1                  // enables the execution of the write-only benchmark
-#define ENABLE_READWRITE 1              // enables the execution of the read-write benchmark
+#define TYPE double                     // Defines the MEMORY QUANTA: type of each memory element we want to access
+#define ENABLE_READ 1                   // Enables the execution of the read-only benchmark
+#define ENABLE_WRITE 1                  // Enables the execution of the write-only benchmark
+#define ENABLE_READWRITE 1              // Enables the execution of the read-write benchmark
 #define SHUFFLE_THREADS 0               // NOT USED BY NOW
 #define REVERSE_SEGMENT_IDXS 0          // Access the segments in reverse order (backward)
 #define SHUFFLE_SEGMENT_IDXS 0          // Access the segments in random index-based order
-#define GATHER_SCATTER_SEGMENT_IDXS 0   // Access the segments in random data-based order
+#define GATHER_SCATTER_SEGMENT_IDXS 1   // Access the segments in random data-based order
 #define REVERSE_ELEMENT_IDXS 0          // Access the elements in reverse order (backward)
 #define SHUFFLE_ELEMENT_IDXS 0          // Access the elements in random index-based order
 #define SHUFFLE_ALL 0                   // NOT USED BY NOW
 #define TEST_RANDOMICITY 0              // Prints out the used indexes in order to test randomicity
+#define IN_THREAD_TIMING 0		// Enables intrathread timing and statistics
 
 // Utility macros for formatted printing
 #define STR(x)   #x
@@ -65,6 +68,7 @@ void print_configuration() {
     PRINT_DEFINE(SHUFFLE_ELEMENT_IDXS);
     PRINT_DEFINE(SHUFFLE_ALL);
     PRINT_DEFINE(TEST_RANDOMICITY);
+    PRINT_DEFINE(IN_THREAD_TIMING);
 }
 
 /*
@@ -109,23 +113,28 @@ inline void readwrite_fun(TYPE *mat, unsigned long idx, TYPE &v) {
 
 void multithread_benchmark(mode_ty mode, TYPE *mat, TYPE &val,
 				  unsigned long num_threads, unsigned long num_segments, unsigned long num_elements,
-				  double &mode_max_time, double &mode_avg_time, double &mode_var_time, unsigned long rnd_input) {
+				  double &mode_out_time, double &mode_max_in_time, double &mode_avg_in_time, double &mode_var_in_time, unsigned long rnd_input) {
 
-    double max_time = 0;
-    double time_sum = 0;
-    double time_sum_of_squares = 0;
+    double in_time_max = 0;
+    double in_time_sum = 0;
+    double in_time_sum_of_squares = 0;
 
-    #pragma omp parallel shared(mat) shared(val) num_threads(num_threads) reduction(max : max_time) reduction(+ : time_sum) reduction(+ : time_sum_of_squares)
+    std::chrono::system_clock::time_point begin_out_time, end_out_time;
+    begin_out_time = std::chrono::high_resolution_clock::now();
+
+    #pragma omp parallel shared(mat) num_threads(num_threads) reduction(max : in_time_max) reduction(+ : in_time_sum) reduction(+ : in_time_sum_of_squares)
     {
     	unsigned long tid = omp_get_thread_num();
 #if defined SHUFFLE_THREADS and SHUFFLE_THREADS != 0
     	//tid = _rotl(rnd, tid) % num_threads;
 #endif
 
-    	std::chrono::system_clock::time_point begin_time, end_time;
-    	begin_time = std::chrono::high_resolution_clock::now();
+#if defined IN_THREAD_TIMING and IN_THREAD_TIMING != 0	
+    	std::chrono::system_clock::time_point begin_in_time, end_in_time;
+    	begin_in_time = std::chrono::high_resolution_clock::now();
+#endif
 
-    	register TYPE v = val;
+    	register TYPE v = 0;//val;
 
 #if defined GATHER_SCATTER_SEGMENT_IDXS and GATHER_SCATTER_SEGMENT_IDXS != 0
     	register unsigned long next_segment_idx = 0;
@@ -192,26 +201,35 @@ void multithread_benchmark(mode_ty mode, TYPE *mat, TYPE &val,
     	    } // END NUM ELEMENTS FOR LOOP
             
 #if defined GATHER_SCATTER_SEGMENT_IDXS and GATHER_SCATTER_SEGMENT_IDXS != 0
-    	    next_segment_idx = (unsigned long)v % num_segments;
+    	    next_segment_idx = increment_lcd_idx(i, rnd_input, v);//std::pow(i + 1, 1 + v * std::pow(rnd_input, v+1));
 #endif
             
     	} // END NUM SEGMENTS FOR LOOP
     
-    	end_time = std::chrono::high_resolution_clock::now();
-	
-    	val = v;
+#if defined IN_THREAD_TIMING and IN_THREAD_TIMING != 0 
+    	end_in_time = std::chrono::high_resolution_clock::now();
+#endif
 
-    	auto delta_us = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - begin_time);
-    	double read_time = (double)delta_us.count() * 1e-9;
+	print_cond(v, (bool)(rnd_input != 0));
 
-    	max_time = std::max(max_time, read_time);
-    	time_sum += read_time;
-    	time_sum_of_squares += std::pow(read_time, 2);
+    	//val = v;
+#if defined IN_THREAD_TIMING and IN_THREAD_TIMING != 0 
+    	auto delta_us = std::chrono::duration_cast<std::chrono::nanoseconds>(end_in_time - begin_in_time);
+    	double in_time = (double)delta_us.count() * 1e-9;
+
+    	in_time_max = std::max(in_time_max, in_time);
+    	in_time_sum += in_time;
+    	in_time_sum_of_squares += std::pow(in_time, 2);
+#endif
     } // END omp parallel
 
-    mode_max_time = max_time;
-    mode_avg_time = time_sum / num_threads;
-    mode_var_time = (time_sum_of_squares - std::pow(time_sum, 2) / num_threads) / num_threads;
+    end_out_time = std::chrono::high_resolution_clock::now();
+    auto delta_us = std::chrono::duration_cast<std::chrono::nanoseconds>(end_out_time - begin_out_time);
+    mode_out_time = (double)delta_us.count() * 1e-9;
+
+    mode_max_in_time = in_time_max;
+    mode_avg_in_time = in_time_sum / num_threads;
+    mode_var_in_time = (in_time_sum_of_squares - std::pow(in_time_sum, 2) / num_threads) / num_threads;
 } // END multithreaded_benchmark
 
 /*
@@ -296,15 +314,18 @@ int main(int argc, char* argv[])
     std::cout << running_mode << " with NThreads=" << arg_num_threads << "(" << omp_get_num_threads << ")" << " and MNElements=" << max_num_elements << " and Rinput=" << rnd_input << std::endl;
 
     /// Declare time keepers
-    double read_max_time = 0;
-    double read_avg_time = 0;
-    double read_var_time = 0;
-    double write_max_time = 0;
-    double write_avg_time = 0;
-    double write_var_time = 0;
-    double readwrite_max_time = 0;
-    double readwrite_avg_time = 0;
-    double readwrite_var_time = 0;
+    double read_out_time = 0;
+    double read_max_in_time = 0;
+    double read_avg_in_time = 0;
+    double read_var_in_time = 0;
+    double write_out_time = 0;
+    double write_max_in_time = 0;
+    double write_avg_in_time = 0;
+    double write_var_in_time = 0;
+    double readwrite_out_time = 0;
+    double readwrite_max_in_time = 0;
+    double readwrite_avg_in_time = 0;
+    double readwrite_var_in_time = 0;
 
     // Launch the benchmark allocating a big enough matrix
     std::cout << "Allocating matrix." << std::endl;
@@ -327,12 +348,12 @@ int main(int argc, char* argv[])
     std::cout << "mquanta[B], num_threads, num_segments, num_elements, memsize[B], thread_num, tid, i, ii, j, jj, access_idx" << std::endl;
 #else
     std::cout << "mquanta[B], num_threads, num_segments, num_elements, memsize[B], "
-	      << "read_max_time[s], read_avg_time[s], read_var_time, "
-	      << "write_max_time[s], write_avg_time[s], write_var_time, "
-	      << "readwrite_max_time[s], readwrite_avg_time[s], readwrite_var_time, "
-	      << "read_min_bw[B/s], read_avg_bw[B/s], "
-          << "write_min_bw[B/s], write_avg_bw[B/s], "
-          << "readwrite_min_bw[B/s], readwrite_avg_bw[B/s], " << std::endl;
+	      << "read_out_time[s], read_max_in_time[s], read_avg_in_time[s], read_var_in_time, "
+	      << "write_out_time[s], write_max_in_time[s], write_avg_in_time[s], write_var_in_time, "
+	      << "readwrite_out_time[s], readwrite_max_in_time[s], readwrite_avg_in_time[s], readwrite_var_in_time, "
+	      << "read_out_bw[B/s], read_min_bw[B/s], read_avg_bw[B/s], "
+              << "write_out_bw[B/s], write_min_bw[B/s], write_avg_bw[B/s], "
+              << "readwrite_out_bw[B/s], readwrite_min_bw[B/s], readwrite_avg_bw[B/s], " << std::endl;
 #endif
 
     double memsize = (double)omp_num_threads * (double)max_num_elements * (double)sizeof(TYPE);
@@ -344,28 +365,28 @@ int main(int argc, char* argv[])
         TYPE val = std::rand();
 
 #if defined TEST_RANDOMICITY and TEST_RANDOMICITY != 0
-        multithread_benchmark(TEST, mat, val, omp_num_threads, num_segments, num_elements, read_max_time, read_avg_time, read_var_time, rnd_input);
+        multithread_benchmark(TEST, mat, val, omp_num_threads, num_segments, num_elements, read_out_time, read_max_in_time, read_avg_in_time, read_var_in_time, rnd_input);
 #else
 
 #if defined ENABLE_READ and ENABLE_READ != 0
-	    multithread_benchmark(READ, mat, val, omp_num_threads, num_segments, num_elements, read_max_time, read_avg_time, read_var_time, rnd_input);
+	    multithread_benchmark(READ, mat, val, omp_num_threads, num_segments, num_elements, read_out_time, read_max_in_time, read_avg_in_time, read_var_in_time, rnd_input);
 #endif
 
 #if defined ENABLE_WRITE and ENABLE_WRITE != 0
-	    multithread_benchmark(WRITE, mat, val, omp_num_threads, num_segments, num_elements, write_max_time, write_avg_time, write_var_time, rnd_input);
+	    multithread_benchmark(WRITE, mat, val, omp_num_threads, num_segments, num_elements, write_out_time, write_max_in_time, write_avg_in_time, write_var_in_time, rnd_input);
 #endif
 
 #if defined ENABLE_READWRITE and ENABLE_READWRITE != 0
-	    multithread_benchmark(READWRITE, mat, val, omp_num_threads, num_segments, num_elements, readwrite_max_time, readwrite_avg_time, readwrite_var_time, rnd_input);
+	    multithread_benchmark(READWRITE, mat, val, omp_num_threads, num_segments, num_elements, readwrite_out_time, readwrite_max_in_time, readwrite_avg_in_time, readwrite_var_in_time, rnd_input);
 #endif
 
 		std::cout << std::fixed << sizeof(TYPE) << " " << omp_num_threads << " " << num_segments << " " << num_elements << " " << std::scientific <<  memsize << " " 
-		   << read_max_time << " " << read_avg_time << " " << read_var_time << " " 
-		   << write_max_time << " " << write_avg_time << " " << write_var_time << " " 
-		   << readwrite_max_time << " " << readwrite_avg_time << " " << readwrite_var_time << " "
-		   << get_bw(memsize, read_max_time) << " " << get_bw(memsize, read_avg_time) << " " 
-		   << get_bw(memsize, write_max_time) << " " << get_bw(memsize, write_avg_time) << " " 
-		   << get_bw(2*memsize, readwrite_max_time) << " " << get_bw(2*memsize, readwrite_avg_time) << std::endl;
+		   << read_out_time << " " << read_max_in_time << " " << read_avg_in_time << " " << read_var_in_time << " " 
+		   << write_out_time << " " << write_max_in_time << " " << write_avg_in_time << " " << write_var_in_time << " " 
+		   << readwrite_out_time << " " << readwrite_max_in_time << " " << readwrite_avg_in_time << " " << readwrite_var_in_time << " "
+		   << get_bw(memsize, read_out_time) << " " << get_bw(memsize, read_max_in_time) << " " << get_bw(memsize, read_avg_in_time) << " " 
+		   << get_bw(memsize, write_out_time) << " " << get_bw(memsize, write_max_in_time) << " " << get_bw(memsize, write_avg_in_time) << " " 
+		   << get_bw(memsize, readwrite_out_time) << " " << get_bw(2*memsize, readwrite_max_in_time) << " " << get_bw(2*memsize, readwrite_avg_in_time) << std::endl;
 
         // Do random things for preventing compiler optimizations
 	for(unsigned int i = 0; i < (unsigned int)val % 3; ++i) {
