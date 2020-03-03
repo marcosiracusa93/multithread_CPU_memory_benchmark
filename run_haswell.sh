@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --qos=regular
-#SBATCH --time=5
+#SBATCH --time=10
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=1
 #SBATCH --cpus-per-task=32
@@ -18,7 +18,9 @@ export OMP_PROC_BIND=true
 export OMP_PLACES=threads #(core/threads)
 export OMP_NUM_THREADS=$num_threads
 
-srun ./bin/benchmark_mt $num_threads $max_num_elements 0
+srun ./bin/read_benchmark_mt $num_threads $max_num_elements 0
+srun ./bin/write_benchmark_mt $num_threads $max_num_elements 0
+srun ./bin/readwrite_benchmark_mt $num_threads $max_num_elements 0
 
 
 #for i in {0..9}

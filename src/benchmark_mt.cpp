@@ -33,13 +33,13 @@
  */
 
 #define TYPE double                     // Defines the MEMORY QUANTA: type of each memory element we want to access
-#define ENABLE_READ 1                   // Enables the execution of the read-only benchmark
-#define ENABLE_WRITE 1                  // Enables the execution of the write-only benchmark
-#define ENABLE_READWRITE 1              // Enables the execution of the read-write benchmark
+//#define ENABLE_READ 1                   // Enables the execution of the read-only benchmark
+//#define ENABLE_WRITE 1                  // Enables the execution of the write-only benchmark
+//#define ENABLE_READWRITE 1              // Enables the execution of the read-write benchmark
 #define SHUFFLE_THREADS 0               // NOT USED BY NOW
 #define REVERSE_SEGMENT_IDXS 0          // Access the segments in reverse order (backward)
 #define SHUFFLE_SEGMENT_IDXS 0          // Access the segments in random index-based order
-#define GATHER_SCATTER_SEGMENT_IDXS 1   // Access the segments in random data-based order
+#define GATHER_SCATTER_SEGMENT_IDXS 0   // Access the segments in random data-based order
 #define REVERSE_ELEMENT_IDXS 0          // Access the elements in reverse order (backward)
 #define SHUFFLE_ELEMENT_IDXS 0          // Access the elements in random index-based order
 #define SHUFFLE_ALL 0                   // NOT USED BY NOW
@@ -139,7 +139,7 @@ void multithread_benchmark(mode_ty mode, TYPE *mat, TYPE &val,
 #if defined GATHER_SCATTER_SEGMENT_IDXS and GATHER_SCATTER_SEGMENT_IDXS != 0
     	register unsigned long next_segment_idx = 0;
 #endif
-
+#pragma vector nontemporal(mat)
 #if defined REVERSE_SEGMENT_IDXS and REVERSE_SEGMENT_IDXS != 0
       	for (unsigned long i = num_segments; i > 0; --i) {
     	    unsigned long ii = i - 1;
@@ -151,12 +151,11 @@ void multithread_benchmark(mode_ty mode, TYPE *mat, TYPE &val,
     	    unsigned long ii = i;
 #endif
 
-#pragma vector nontemporal(mat)
-
 #if defined SHUFFLE_SEGMENT_IDXS and SHUFFLE_SEGMENT_IDXS != 0
     	    //ii = _rotl(rnd, ii) % num_segments;
 #endif
 
+#pragma vector nontemporal(mat)
 #if defined REVERSE_ELEMENT_IDXS and REVERSE_ELEMENT_IDXS != 0
     	    for (unsigned long j = num_elements; j > 0; --j) {
     		unsigned long jj = j - 1;
@@ -164,7 +163,7 @@ void multithread_benchmark(mode_ty mode, TYPE *mat, TYPE &val,
     	    for (unsigned long j = 0; j < num_elements; ++j) {
     		unsigned long jj = j;
 #endif
-        
+       
 #if defined SHUFFLE_ELEMENT_IDXS and SHUFFLE_ELEMENT_IDXS != 0
     		//jj = _rotl(rnd, jj) % num_elements;
 #endif
@@ -175,28 +174,26 @@ void multithread_benchmark(mode_ty mode, TYPE *mat, TYPE &val,
                 unsigned long idx = tid * num_segments * num_elements + ii * num_elements + jj;
 #endif
 		
-
 #if defined TEST_RANDOMICITY and TEST_RANDOMICITY != 0
     		    std::stringstream stream;
     		    stream << sizeof(TYPE) << " " << num_threads << " " << num_segments << " " << num_elements << " " << "x" << " " << omp_get_thread_num() << " " << tid << " " << i << " " << ii << " " << j << " " << jj << " " << idx << std::endl;
     		    std::cout << stream.str();
 #else
-    	        switch (mode) {
-    		        case READ:
-    		            v += mat[idx];
-    			        //read_fun(mat, idx, v);
-    		            break;
-    		        case WRITE:
-    		            mat[idx] = v;
-    			        //write_fun(mat, idx, v);
-    		            break;
-    		        case READWRITE:
-    		    	    TYPE r = mat[idx];
-    			        v += r;
-    		    	    mat[idx] += v;
-    			        //readwrite_fun(mat, idx, v);
-    		            break;
-    		    }
+
+#if defined ENABLE_READ and ENABLE_READ != 0
+    		    v += mat[idx];
+#endif
+
+#if defined ENABLE_WRITE and ENABLE_WRITE != 0
+    		    mat[idx] = v;
+#endif
+
+#if defined ENABLE_READWRITE and ENABLE_READWRITE != 0
+    		    TYPE r = mat[idx];
+    		    v += r;
+    		    mat[idx] += v;
+#endif
+
 #endif
     	    } // END NUM ELEMENTS FOR LOOP
             
@@ -210,9 +207,9 @@ void multithread_benchmark(mode_ty mode, TYPE *mat, TYPE &val,
     	end_in_time = std::chrono::high_resolution_clock::now();
 #endif
 
+	// Avoiding compiler stripping anything
 	print_cond(v, (bool)(rnd_input != 0));
 
-    	//val = v;
 #if defined IN_THREAD_TIMING and IN_THREAD_TIMING != 0 
     	auto delta_us = std::chrono::duration_cast<std::chrono::nanoseconds>(end_in_time - begin_in_time);
     	double in_time = (double)delta_us.count() * 1e-9;
