@@ -39,12 +39,12 @@
 #define SHUFFLE_THREADS 0               // NOT USED BY NOW
 #define REVERSE_SEGMENT_IDXS 0          // Access the segments in reverse order (backward)
 #define SHUFFLE_SEGMENT_IDXS 0          // Access the segments in random index-based order
-#define GATHER_SCATTER_SEGMENT_IDXS 0   // Access the segments in random data-based order
+#define GATHER_SCATTER_SEGMENT_IDXS 1   // Access the segments in random data-based order
 #define REVERSE_ELEMENT_IDXS 0          // Access the elements in reverse order (backward)
 #define SHUFFLE_ELEMENT_IDXS 0          // Access the elements in random index-based order
 #define SHUFFLE_ALL 0                   // NOT USED BY NOW
 #define TEST_RANDOMICITY 0              // Prints out the used indexes in order to test randomicity
-#define IN_THREAD_TIMING 0		// Enables intrathread timing and statistics
+#define IN_THREAD_TIMING 1		// Enables intrathread timing and statistics
 
 // Utility macros for formatted printing
 #define STR(x)   #x
@@ -69,6 +69,17 @@ void print_configuration() {
     PRINT_DEFINE(SHUFFLE_ALL);
     PRINT_DEFINE(TEST_RANDOMICITY);
     PRINT_DEFINE(IN_THREAD_TIMING);
+}
+
+#include <time.h>
+#include <sys/time.h>
+inline double get_wall_time(){
+    struct timeval time;
+    if (gettimeofday(&time,NULL)){
+        //  Handle error
+        return 0;
+    }
+    return (double)time.tv_sec + (double)time.tv_usec * .000001;
 }
 
 /*
@@ -119,8 +130,7 @@ void multithread_benchmark(mode_ty mode, TYPE *mat, TYPE &val,
     double in_time_sum = 0;
     double in_time_sum_of_squares = 0;
 
-    std::chrono::system_clock::time_point begin_out_time, end_out_time;
-    begin_out_time = std::chrono::high_resolution_clock::now();
+    double begin_out_time = get_wall_time();
 
     #pragma omp parallel shared(mat) num_threads(num_threads) reduction(max : in_time_max) reduction(+ : in_time_sum) reduction(+ : in_time_sum_of_squares)
     {
@@ -130,8 +140,7 @@ void multithread_benchmark(mode_ty mode, TYPE *mat, TYPE &val,
 #endif
 
 #if defined IN_THREAD_TIMING and IN_THREAD_TIMING != 0	
-    	std::chrono::system_clock::time_point begin_in_time, end_in_time;
-    	begin_in_time = std::chrono::high_resolution_clock::now();
+    	double begin_in_time = omp_get_wtime();
 #endif
 
     	register TYPE v = 0;//val;
@@ -198,21 +207,20 @@ void multithread_benchmark(mode_ty mode, TYPE *mat, TYPE &val,
     	    } // END NUM ELEMENTS FOR LOOP
             
 #if defined GATHER_SCATTER_SEGMENT_IDXS and GATHER_SCATTER_SEGMENT_IDXS != 0
-    	    next_segment_idx = increment_lcd_idx(i, rnd_input, v);//std::pow(i + 1, 1 + v * std::pow(rnd_input, v+1));
+    	    next_segment_idx = increment_lcd_idx(i, num_segments, 0, rnd_input, v);//std::pow(i + 1, 1 + v * std::pow(rnd_input, v+1));
 #endif
             
     	} // END NUM SEGMENTS FOR LOOP
     
 #if defined IN_THREAD_TIMING and IN_THREAD_TIMING != 0 
-    	end_in_time = std::chrono::high_resolution_clock::now();
+    	double end_in_time = omp_get_wtime();
 #endif
 
 	// Avoiding compiler stripping anything
 	print_cond(v, (bool)(rnd_input != 0));
 
-#if defined IN_THREAD_TIMING and IN_THREAD_TIMING != 0 
-    	auto delta_us = std::chrono::duration_cast<std::chrono::nanoseconds>(end_in_time - begin_in_time);
-    	double in_time = (double)delta_us.count() * 1e-9;
+#if defined IN_THREAD_TIMING and IN_THREAD_TIMING != 0
+    	double in_time = end_in_time - begin_in_time;// * 1e-9;
 
     	in_time_max = std::max(in_time_max, in_time);
     	in_time_sum += in_time;
@@ -220,9 +228,8 @@ void multithread_benchmark(mode_ty mode, TYPE *mat, TYPE &val,
 #endif
     } // END omp parallel
 
-    end_out_time = std::chrono::high_resolution_clock::now();
-    auto delta_us = std::chrono::duration_cast<std::chrono::nanoseconds>(end_out_time - begin_out_time);
-    mode_out_time = (double)delta_us.count() * 1e-9;
+    double end_out_time = get_wall_time();
+    mode_out_time = end_out_time - begin_out_time;// * 1e-9;
 
     mode_max_in_time = in_time_max;
     mode_avg_in_time = in_time_sum / num_threads;

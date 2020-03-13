@@ -10,7 +10,7 @@
 #SBATCH --mail-user=marco.siracusa@mail.polimi.it
 
 max_num_elements=$((2**28))
-num_threads=$((2**5))
+num_threads=$((2**0))
 
 export KMP_AFFINITY=compact,verbose
 

@@ -2,8 +2,8 @@
 #include<iostream>
 
 //template<typename T>
-unsigned long increment_lcd_idx(unsigned long idx, unsigned long rnd,  double val) {
-	return idx + 1;// + rnd * (unsigned long)val;
+unsigned long increment_lcd_idx(unsigned long idx, unsigned long num_segments, unsigned long cache_lines_per_segment, unsigned long rnd,  double val) {
+	return (idx % 2 == 0 ? idx : num_segments - idx);
 }
 
 void print_cond(double val, bool cond) {
