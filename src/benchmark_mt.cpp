@@ -150,13 +150,16 @@ void multithread_benchmark(mode_ty mode, TYPE *mat, TYPE &val,
 #endif
 #pragma vector nontemporal(mat)
 #if defined REVERSE_SEGMENT_IDXS and REVERSE_SEGMENT_IDXS != 0
-      	for (unsigned long i = num_segments; i > 0; --i) {
+#pragma vector nontemporal(mat)
+segments_loop : for (unsigned long i = num_segments; i > 0; --i) {
     	    unsigned long ii = i - 1;
 #elif defined GATHER_SCATTER_SEGMENT_IDXS and GATHER_SCATTER_SEGMENT_IDXS != 0
-    	for (unsigned long i = 0; i < num_segments; ++i) {
+#pragma vector nontemporal(mat)
+segments_loop : for (unsigned long i = 0; i < num_segments; ++i) {
             unsigned long ii = next_segment_idx;
 #else
-    	for (unsigned long i = 0; i < num_segments; ++i) {
+#pragma vector nontemporal(mat)
+segments_loop : for (unsigned long i = 0; i < num_segments; ++i) {
     	    unsigned long ii = i;
 #endif
 
@@ -166,10 +169,12 @@ void multithread_benchmark(mode_ty mode, TYPE *mat, TYPE &val,
 
 #pragma vector nontemporal(mat)
 #if defined REVERSE_ELEMENT_IDXS and REVERSE_ELEMENT_IDXS != 0
-    	    for (unsigned long j = num_elements; j > 0; --j) {
+#pragma vector nontemporal(mat)
+elements_loop : for (unsigned long j = num_elements; j > 0; --j) {
     		unsigned long jj = j - 1;
 #else
-    	    for (unsigned long j = 0; j < num_elements; ++j) {
+#pragma vector nontemporal(mat)
+elements_loop : for (unsigned long j = 0; j < num_elements; ++j) {
     		unsigned long jj = j;
 #endif
        
@@ -198,9 +203,8 @@ void multithread_benchmark(mode_ty mode, TYPE *mat, TYPE &val,
 #endif
 
 #if defined ENABLE_READWRITE and ENABLE_READWRITE != 0
-    		    TYPE r = mat[idx];
-    		    v += r;
-    		    mat[idx] += v;
+    		    v += mat[idx];
+    		    mat[idx] = v;
 #endif
 
 #endif
@@ -363,7 +367,7 @@ int main(int argc, char* argv[])
     double memsize = (double)omp_num_threads * (double)max_num_elements * (double)sizeof(TYPE);
 
     // Increase the spatial locality and see what happens
-    for (unsigned long num_elements = 1; num_elements <= max_num_elements; num_elements = num_elements << 1) {
+spatial_locality_loop : for (unsigned long num_elements = 8; num_elements <= max_num_elements; num_elements = num_elements << 1) {
         unsigned long num_segments = max_num_elements / num_elements;
 
         TYPE val = std::rand();
