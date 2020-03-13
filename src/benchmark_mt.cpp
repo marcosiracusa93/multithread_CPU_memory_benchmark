@@ -394,7 +394,7 @@ spatial_locality_loop : for (unsigned long num_elements = 8; num_elements <= max
 		   << readwrite_out_time << " " << readwrite_max_in_time << " " << readwrite_avg_in_time << " " << readwrite_var_in_time << " "
 		   << get_bw(memsize, read_out_time) << " " << get_bw(memsize, read_max_in_time) << " " << get_bw(memsize, read_avg_in_time) << " " 
 		   << get_bw(memsize, write_out_time) << " " << get_bw(memsize, write_max_in_time) << " " << get_bw(memsize, write_avg_in_time) << " " 
-		   << get_bw(memsize, readwrite_out_time) << " " << get_bw(2*memsize, readwrite_max_in_time) << " " << get_bw(2*memsize, readwrite_avg_in_time) << std::endl;
+		   << get_bw(memsize, 2*readwrite_out_time) << " " << get_bw(2*memsize, readwrite_max_in_time) << " " << get_bw(2*memsize, readwrite_avg_in_time) << std::endl;
 
         // Do random things for preventing compiler optimizations
 	for(unsigned int i = 0; i < (unsigned int)val % 3; ++i) {
