@@ -156,7 +156,7 @@ segments_loop : for (unsigned long i = num_segments; i > 0; --i) {
 #elif defined GATHER_SCATTER_SEGMENT_IDXS and GATHER_SCATTER_SEGMENT_IDXS != 0
 #pragma vector nontemporal(mat)
 segments_loop : for (unsigned long i = 0; i < num_segments; ++i) {
-            unsigned long ii = next_segment_idx;
+            unsigned long ii = increment_lcd_idx(num_segments - 1 - i, num_segments, 0, rnd_input, v);//next_segment_idx;
 #else
 #pragma vector nontemporal(mat)
 segments_loop : for (unsigned long i = 0; i < num_segments; ++i) {
